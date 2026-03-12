@@ -3,7 +3,9 @@ from flask_jwt_extended import create_access_token
 from app.extensions import  db
 from app.models.user import User
 
+
 auth_bp = Blueprint("auth", __name__)
+
 
 @auth_bp.route("/api/register", methods=["POST"])
 def register():
@@ -28,6 +30,7 @@ def register():
     db.session.add(user)
     db.session.commit()
     db.session.refresh(user)
+    print("User saved to database")
 
     return jsonify({
         "message":"User registered successfully",
