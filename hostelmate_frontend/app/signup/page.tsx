@@ -63,7 +63,7 @@ export default function SignUp() {
 
           <div className="space-y-2">
             <Label>Password</Label>
-            <Input type="password" placeholder="Enter password" onChange={(e)=>setConfirmPassword(e.target.value)} />
+            <Input type="password" placeholder="Enter password" onChange={(e)=>setPassword(e.target.value)} />
           </div>
 
           <div className="space-y-2">

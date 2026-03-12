@@ -11,23 +11,25 @@ export default function SignIn() {
   const [password,setPassword] = useState("")
 
   const handleLogin = async () => {
-    console.log("Login button clicked")
 
-    const res = await fetch("http://127.0.0.1:5000/api/login",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
+  const res = await fetch("http://127.0.0.1:5000/api/login",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body: JSON.stringify({
+      email,
+      password
     })
+  })
 
-    const data = await res.json()
-    console.log(data)
+  const data = await res.json()
 
-  }
+  console.log(data)
+
+  localStorage.setItem("token", data.access_token)
+
+}
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
 
@@ -43,12 +45,12 @@ export default function SignIn() {
 
           <div className="space-y-2">
             <Label>Email</Label>
-            <Input type="email" placeholder="Enter your email" />
+            <Input type="email" placeholder="Enter your email" onChange={(e)=>setEmail(e.target.value)} />
           </div>
 
           <div className="space-y-2">
             <Label>Password</Label>
-            <Input type="password" placeholder="Enter your password" />
+            <Input type="password" placeholder="Enter your password" onChange={(e)=>setPassword(e.target.value)} />
           </div>
 
           <Button className="w-full" onClick={handleLogin}>
