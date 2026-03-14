@@ -2,6 +2,7 @@ hostelmate_backend/.env
 hostelmate_backend/venv/
 __pycache__/
 *.pyc
+migrations/
 
 hostelmate_frontend/node_modules/
 hostelmate_frontend/.env
