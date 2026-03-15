@@ -8,76 +8,48 @@ from datetime import datetime, date
 
 mess_bp = Blueprint("mess_ratings", __name__)
 
-@mess_bp.route("/api/ratings", methods = ["GET"])
-@jwt_required()
-def get_ratings():
-
-    user_id = get_jwt_identity()
-
-    user = User.query.get(user_id)
-    hostel_id = user.hostel_id
+@mess_bp.route("/api/ratings/<int:hostel_id>", methods=["GET"])
+def get_ratings(hostel_id):
 
     page = int(request.args.get("page", 1))
     limit = int(request.args.get("limit", 10))
 
     meal_type = request.args.get("meal_type")
-    date = request.args.get("date")
+    date_filter = request.args.get("date")
 
     query = MessRating.query.filter_by(hostel_id=hostel_id)
 
+    # meal_type filter
     if meal_type:
         query = query.filter(MessRating.meal_type == meal_type)
 
-    if date:
-        query = query.filter(func.date(MessRating.created_at) == date)
+    # date filter
+    if date_filter:
+        query = query.filter(func.date(MessRating.created_at) == date_filter)
 
-    total = query.count()
-
-    ratings = query.order_by(
+    pagination = query.order_by(
         MessRating.created_at.desc()
     ).paginate(page=page, per_page=limit, error_out=False)
 
-    data = [r.to_dict() for r in ratings.items]
-
-
-    breakfast_count = query.filter(
-        MessRating.meal_type == "breakfast"
-    ).count()
-
-    lunch_count = query.filter(
-        MessRating.meal_type == "lunch"
-    ).count()
-
-    dinner_count = query.filter(
-        MessRating.meal_type == "dinner"
-    ).count()
+    ratings = [r.to_dict() for r in pagination.items]
 
     return jsonify({
-        "ratings": data,
+        "ratings": ratings,
         "pagination": {
             "page": page,
             "limit": limit,
-            "total": total
-        },
-        "counts": {
-            "breakfast": breakfast_count,
-            "lunch": lunch_count,
-            "dinner": dinner_count
+            "total": pagination.total,
+            "pages": pagination.pages
         }
     })
 
-
-@mess_bp.route("/api/today", methods=["GET"])
-@jwt_required()
-def today_ratings():
-
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
+@mess_bp.route("/api/today/<int:hostel_id>", methods=["GET"])
+def today_ratings(hostel_id):
 
     today = date.today()
 
     ratings = MessRating.query.filter(
-        MessRating.hostel_id == user.hostel_id,
+        MessRating.hostel_id == hostel_id,
         func.date(MessRating.created_at) == today
     ).all()
 
@@ -86,38 +58,8 @@ def today_ratings():
     })
 
 
-@mess_bp.route("/api/stats", methods=["GET"])
-@jwt_required()
-def rating_stats():
-
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-
-    hostel_id = user.hostel_id
-
-    total = MessRating.query.filter_by(
-        hostel_id=hostel_id
-    ).count()
-
-    breakfast = MessRating.query.filter_by(
-        hostel_id=hostel_id,
-        meal_type="breakfast"
-    ).count()
-
-    lunch = MessRating.query.filter_by(
-        hostel_id=hostel_id,
-        meal_type="lunch"
-    ).count()
-
-    dinner = MessRating.query.filter_by(
-        hostel_id=hostel_id,
-        meal_type="dinner"
-    ).count()
-
-    five_star = MessRating.query.filter(
-        MessRating.hostel_id == hostel_id,
-        MessRating.rating == 5
-    ).count()
+@mess_bp.route("/api/stats/<int:hostel_id>", methods=["GET"])
+def rating_stats(hostel_id):
 
     avg_rating = db.session.query(
         func.avg(MessRating.rating)
@@ -125,30 +67,29 @@ def rating_stats():
         MessRating.hostel_id == hostel_id
     ).scalar()
 
+    total = MessRating.query.filter_by(hostel_id=hostel_id).count()
+
     return jsonify({
         "total_ratings": total,
-        "breakfast_ratings": breakfast,
-        "lunch_ratings": lunch,
-        "dinner_ratings": dinner,
-        "five_star_ratings": five_star,
         "average_rating": float(avg_rating or 0)
     })
 
 @mess_bp.route("/api/submit", methods=["POST"])
-@jwt_required()
 def submit_rating():
-
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
 
     data = request.get_json()
 
+    user_id = data.get("user_id")
+    hostel_id = data.get("hostel_id")
+
     rating = MessRating(
         user_id=user_id,
-        hostel_id=user.hostel_id,
-        meal_type=data["meal_type"],
-        rating=data["rating"],
+        hostel_id=hostel_id,
+        meal_type=data.get("meal_type"),
+        rating=data.get("rating"),
         comment=data.get("comment"),
+        photo_url=data.get("photo_url"),
+        date=date.today(),
         created_at=datetime.utcnow()
     )
 
@@ -156,6 +97,6 @@ def submit_rating():
     db.session.commit()
 
     return jsonify({
-        "message":"Rating submitted successfully",
+        "message": "Rating submitted successfully",
         "rating": rating.to_dict()
-    }),201
+    }), 201

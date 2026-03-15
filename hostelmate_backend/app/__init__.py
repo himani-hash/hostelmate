@@ -3,6 +3,7 @@ from flask_cors import CORS
 from app.extensions import db, jwt
 from app.routes.auth import auth_bp
 from app.routes.mess_rating import mess_bp
+from app.routes.hostel import hostel_bp 
 from flask_migrate import Migrate
 from app.models.user import User
 from app.models.hostel import Hostels
@@ -29,5 +30,6 @@ def create_app():
 
     app.register_blueprint(auth_bp, url_prefix="")
     app.register_blueprint(mess_bp, url_prefix="")
+    app.register_blueprint(hostel_bp, url_prefix="")
 
     return app

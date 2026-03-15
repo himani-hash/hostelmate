@@ -52,7 +52,7 @@ def login():
             "error":"Invalid credentials"
         }),401
     
-    token = create_access_token(identity=user.id)
+    token = create_access_token(identity=str(user.id))
 
     return jsonify({
         "message":"login successful",
