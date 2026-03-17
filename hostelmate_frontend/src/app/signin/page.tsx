@@ -5,31 +5,40 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
+
 
 export default function SignIn() {
    const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const router = useRouter()   // ✅ add this
 
   const handleLogin = async () => {
 
-  const res = await fetch("http://127.0.0.1:5000/api/login",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body: JSON.stringify({
-      email,
-      password
+    const res = await fetch("http://127.0.0.1:5000/api/login",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
     })
-  })
 
-  const data = await res.json()
+    const data = await res.json()
 
-  console.log(data)
+    console.log(data)
 
-  localStorage.setItem("token", data.access_token)
+    if(res.ok){
+     
+      localStorage.setItem("token", data.access_token)
+       router.push("/dashboard")
+    } else {
+      alert(data.msg || "Login failed")
+    }
+  }
 
-}
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
 

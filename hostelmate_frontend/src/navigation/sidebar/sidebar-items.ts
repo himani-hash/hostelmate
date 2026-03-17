@@ -49,8 +49,8 @@ export const sidebarItems: NavGroup[] = [
     label: "Dashboards",
     items: [
       {
-        title: "Default",
-        url: "/dashboard/default",
+        title: "Mess rating",
+        url: "/dashboard/mess-rating",
         icon: LayoutDashboard,
       },
       {
