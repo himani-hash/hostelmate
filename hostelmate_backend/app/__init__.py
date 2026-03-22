@@ -5,11 +5,13 @@ from app.routes.auth import auth_bp
 from app.routes.mess_rating import mess_bp
 from app.routes.hostel import hostel_bp
 from app.routes.mess_menu import menu_bp 
+from app.routes.complaints import complaint_bp
 from flask_migrate import Migrate
 from app.models.user import User
 from app.models.hostel import Hostels
 from app.models.mess_rating import MessRating
 from app.models.mess_menu import Messmenu
+from app.models.complaints import Complaint
 import os
 from dotenv import load_dotenv
 
@@ -34,5 +36,6 @@ def create_app():
     app.register_blueprint(mess_bp, url_prefix="")
     app.register_blueprint(hostel_bp, url_prefix="")
     app.register_blueprint(menu_bp, url_prefix="")
+    app.register_blueprint(complaint_bp, url_prefix="")
 
     return app
