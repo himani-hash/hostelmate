@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import func
 from app.extensions import db
 from app.models.user import User
+from app.models.hostel import Hostels
 from werkzeug.utils import secure_filename
 from app.models.mess_rating import MessRating
 from datetime import datetime, date, timedelta
@@ -11,6 +12,7 @@ import cloudinary.uploader
 mess_bp = Blueprint("mess_ratings", __name__)
 
 @mess_bp.route("/api/ratings/<int:hostel_id>", methods=["GET"])
+@jwt_required()
 def get_ratings(hostel_id):
 
     page = int(request.args.get("page", 1))
@@ -84,9 +86,14 @@ def submit_rating():
         user_id = get_jwt_identity()
 
         user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({"error":"user not found"}),404
+        
+        if not user.hostel_id:
+            return jsonify({"error":"User is not assigned to any hostel"}),400
 
         hostel_id = user.hostel_id
-
         meal_type = request.form.get("meal_type")
         rating_value = request.form.get("rating")
         comment = request.form.get("comment")
@@ -110,6 +117,14 @@ def submit_rating():
             date=date.today(),
             created_at=datetime.utcnow()
         )
+
+        print("user_id:", user_id)
+        print("hostel_id:", hostel_id)
+        print("meal_type:", meal_type)
+        print("rating:", rating_value)
+        print("comment:", comment)
+        print("photo:", photo)
+       
 
         db.session.add(rating)
         db.session.commit()

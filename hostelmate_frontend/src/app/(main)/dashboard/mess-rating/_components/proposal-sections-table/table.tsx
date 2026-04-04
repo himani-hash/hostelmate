@@ -3,6 +3,7 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
   closestCenter,
@@ -57,6 +58,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { DraggableProposalSectionsRow, proposalSectionsColumns } from "./columns";
 import type { ProposalSectionsRow } from "./schema";
+import { Console } from "console";
 
 const VIEW_OPTIONS = [
   { value: "outline", label: "Outline" },
@@ -70,21 +72,47 @@ type ViewOption = (typeof VIEW_OPTIONS)[number]["value"];
 export function ProposalSectionsTable({ data: initialData }: { data: ProposalSectionsRow[] }) {
   const router = useRouter();
 
-  const [data, setData] = React.useState(() => initialData);
   const [activeView, setActiveView] = React.useState<ViewOption>("outline");
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  
+
+  const [data, setData] = React.useState<any[]>([]);
+console.log("himani ka data=>", data);
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
     pageSize: 10,
   });
 
+  React.useEffect(() => {
+    const fetchRatings = async () => {
+      const token = localStorage.getItem("token");
+      // const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+   
+console.log("ENV:", process.env.NEXT_PUBLIC_BACKEND_URL);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/ratings/1?page=${pagination.pageIndex + 1}&limit=${pagination.pageSize}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const result = await res.json();
+      setData(result.ratings);
+      console.log("hello",result)
+    };
+
+    fetchRatings();
+  }, [pagination]);
+
   const sortableId = React.useId();
   const sensors = useSensors(useSensor(MouseSensor, {}), useSensor(TouchSensor, {}), useSensor(KeyboardSensor, {}));
 
-  const dataIds = React.useMemo<UniqueIdentifier[]>(() => data.map(({ id }) => id), [data]);
+
 
   const table = useReactTable({
     data,
@@ -111,17 +139,6 @@ export function ProposalSectionsTable({ data: initialData }: { data: ProposalSec
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (active && over && active.id !== over.id) {
-      setData((currentData) => {
-        const oldIndex = dataIds.indexOf(active.id);
-        const newIndex = dataIds.indexOf(over.id);
-        return arrayMove(currentData, oldIndex, newIndex);
-      });
-    }
-  }
 
   return (
     <Tabs
@@ -144,38 +161,49 @@ export function ProposalSectionsTable({ data: initialData }: { data: ProposalSec
 
       </div>
 
-      {/* 👉 BAQI CODE SAME */}
-      <TabsContent value="outline">
-        <div className="overflow-hidden rounded-lg border">
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-            id={sortableId}
-          >
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => (
-                      <TableHead key={header.id}>
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableHeader>
+      
+    <div className="w-full border-amber-500 bg-gray-300">
+  
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+      
+      {data.map((item) => (
+        <div
+          key={item.id}
+          className="bg-white shadow-md rounded-2xl overflow-hidden hover:shadow-xl transition duration-300"
+        >
+          {/* Image */}
+          <img
+            src={item.photo_url}
+            alt="food"
+            className="w-full h-48 object-cover"
+          />
 
-              <TableBody>
-                {table.getRowModel().rows.map((row) => (
-                  <DraggableProposalSectionsRow key={row.id} row={row} />
-                ))}
-              </TableBody>
-            </Table>
-          </DndContext>
+          {/* Content */}
+          <div className="p-4">
+            <h2 className="text-lg font-semibold capitalize">
+              {item.meal_type}
+            </h2>
+
+            <p className="text-gray-600 mt-1">
+              {item.comment}
+            </p>
+
+            {/* Rating */}
+            <div className="flex items-center mt-2">
+              ⭐ {item.rating} / 5
+            </div>
+
+            {/* Date */}
+            <p className="text-sm text-gray-400 mt-2">
+              {item.date}
+            </p>
+          </div>
         </div>
-      </TabsContent>
+      ))}
+
+    </div>
+
+    </div>
     </Tabs>
   );
 }

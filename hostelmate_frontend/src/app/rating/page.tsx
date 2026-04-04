@@ -36,22 +36,27 @@ export default function RatingPage() {
     setFormData({ ...formData, rating: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async(e:React.FormEvent) => {
+    e.preventDefault();
   const data = new FormData();
 
   data.append("meal_type", formData.mealType);
   data.append("rating", formData.rating.toString());
   data.append("comment", formData.comment);
-  data.append("user_id", "1");
 
   if (formData.photo) {
     data.append("photo", formData.photo);
   }
 
-  const res = await fetch("http://127.0.0.1:5000/api/submit", {
+  const token = localStorage.getItem("token");
+
+const res = await fetch("http://127.0.0.1:5000/api/submit", {
     method: "POST",
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
     body: data,
-  });
+});
 
   const result = await res.json();
   console.log(result);
