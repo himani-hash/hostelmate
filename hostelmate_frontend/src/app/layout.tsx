@@ -37,6 +37,7 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
         <ThemeBootScript />
       </head>
       <body className={`${fontVars} min-h-screen antialiased`}>
+        
         <TooltipProvider>
           <PreferencesStoreProvider
             themeMode={theme_mode}

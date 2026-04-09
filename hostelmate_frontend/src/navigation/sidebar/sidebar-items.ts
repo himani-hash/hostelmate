@@ -54,8 +54,8 @@ export const sidebarItems: NavGroup[] = [
         icon: LayoutDashboard,
       },
       {
-        title: "CRM",
-        url: "/dashboard/crm",
+        title: "Mess Menu",
+        url: "/dashboard/mess-menu",
         icon: ChartBar,
       },
       {
