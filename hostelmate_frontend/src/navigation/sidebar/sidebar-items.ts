@@ -94,7 +94,7 @@ export const sidebarItems: NavGroup[] = [
 export const wardenSidebarItems: NavGroup[] = [
   {
     id: 1,
-    label: "Dashboards",
+    label: "Warden Dashboards",
     items: [
       {
         title: "Mess rating",
@@ -103,22 +103,22 @@ export const wardenSidebarItems: NavGroup[] = [
       },
       {
         title: "Mess Menu",
-        url: "/dashboard/mess-menu",
+        url: "/warden-dashboard/mess-menu",
         icon: ChartBar,
       },
       {
-        title: "Request",
-        url: "/dashboard/request",
+        title: "request",
+        url: "/warden-dashboard/request",
         icon: ChartBar,
       },
       {
         title: "Account",
-        url: "/dashboard/account",
+        url: "/warden-dashboard/account",
         icon: Banknote,
       },
       {
-        title: "Analytics",
-        url: "/dashboard/analytics",
+        title: "Users",
+        url: "/warden-dashboard/users",
         icon: Gauge,
       }
     ],

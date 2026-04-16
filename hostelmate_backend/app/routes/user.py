@@ -107,3 +107,45 @@ def change_password():
     db.session.commit()
 
     return jsonify({"msg": "Password updated successfully"}), 200
+
+
+@user_bp.route("/users", methods=["GET"])
+def get_users():
+    role = request.args.get("role")
+    is_verified = request.args.get("is_verified")
+
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+
+    query = User.query
+
+    if role:
+        query = query.filter(User.role == role)
+
+    if is_verified is not None:
+        if is_verified.lower() == "true":
+            query = query.filter(User.is_verified == True)
+        elif is_verified.lower() == "false":
+            query = query.filter(User.is_verified == False)
+
+    paginated_users = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    users = paginated_users.items
+
+    result = [
+        {
+            "id": u.id,
+            "name": u.name,
+            "email": u.email,
+            "role": u.role,
+            "is_verified": u.is_verified
+        }
+        for u in users
+    ]
+
+    return jsonify({
+        "users": result,
+        "total": paginated_users.total,
+        "pages": paginated_users.pages,
+        "current_page": paginated_users.page
+    })

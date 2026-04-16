@@ -171,9 +171,12 @@ function SidebarProvider({
     getUser();
   }, []);
 
-  if (currentUser?.role !== "warden") {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (currentUser && currentUser.role !== "warden") {
+      router.push("/dashboard");
+    }
+  }, [currentUser, router]);
+  
   return (
     <SidebarContext.Provider value={contextValue}>
       <div
