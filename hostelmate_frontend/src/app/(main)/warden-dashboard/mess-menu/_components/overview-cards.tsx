@@ -2,11 +2,8 @@
 import * as React from "react";
 
 import { format, subMonths } from "date-fns";
-import { BadgeDollarSign, Wallet } from "lucide-react";
-import { Area, AreaChart, Bar, BarChart, Line, LineChart, XAxis } from "recharts";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 
 type MenuType = {

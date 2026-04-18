@@ -1,12 +1,9 @@
 import type { ReactNode } from "react";
 
 import { cookies } from "next/headers";
-import Link from "next/link";
 
-import { Github } from "lucide-react";
 
 import { AppSidebar } from "@/app/(main)/warden-dashboard/_components/sidebar/app-sidebar";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { users } from "@/data/users";
