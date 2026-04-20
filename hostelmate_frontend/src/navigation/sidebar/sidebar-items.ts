@@ -5,6 +5,7 @@ import {
   Gauge,
   LayoutDashboard,
   type LucideIcon,
+  Star,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -48,15 +49,15 @@ export const sidebarItems: NavGroup[] = [
         icon: ChartBar,
       },
       {
+        title: "Rate Meal",
+        url: "/dashboard/rating",
+        icon: Star,
+      },
+      {
         title: "Account",
         url: "/dashboard/account",
         icon: Banknote,
       },
-      {
-        title: "Analytics",
-        url: "/dashboard/analytics",
-        icon: Gauge,
-      }
     ],
   },
   {

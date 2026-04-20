@@ -232,3 +232,26 @@ html {
 .disable-transitions * {
   transition: none !important;
 }
+
+button:not(:disabled),
+a,
+[role="button"]:not([aria-disabled="true"]),
+[role="link"],
+[role="menuitem"],
+[role="tab"],
+[role="option"],
+[role="checkbox"],
+[role="radio"],
+[role="switch"],
+summary,
+label[for],
+select:not(:disabled),
+[data-slot="trigger"],
+.cursor-pointer {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Github } from "lucide-react";
 
 import { AppSidebar } from "@/app/(main)/dashboard/_components/sidebar/app-sidebar";
+import { AuthGuard } from "@/components/auth-guard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -27,6 +28,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
   ]);
 
   return (
+    <AuthGuard allowedRoles={["student"]}>
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar variant={variant} collapsible={collapsible} />
       <SidebarInset
@@ -63,5 +65,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
         <div className="h-full p-4 md:p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
+    </AuthGuard>
   );
 }

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 
 
 import { AppSidebar } from "@/app/(main)/warden-dashboard/_components/sidebar/app-sidebar";
+import { AuthGuard } from "@/components/auth-guard";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { SIDEBAR_COLLAPSIBLE_VALUES, SIDEBAR_VARIANT_VALUES } from "@/lib/preferences/layout";
@@ -24,6 +25,7 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
   ]);
 
   return (
+    <AuthGuard allowedRoles={["warden"]}>
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar variant={variant} collapsible={collapsible} />
       <SidebarInset
@@ -60,5 +62,6 @@ export default async function Layout({ children }: Readonly<{ children: ReactNod
         <div className="h-full p-4 md:p-6">{children}</div>
       </SidebarInset>
     </SidebarProvider>
+    </AuthGuard>
   );
 }
