@@ -20,8 +20,20 @@ type Hostel = {
   name: string;
 };
 
+type PaginatedUsers = {
+  users: User[];
+  total: number;
+  pages: number;
+  current_page: number;
+};
+
 export default function UsersTable() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<PaginatedUsers>({
+    users: [],
+    total: 0,
+    pages: 0,
+    current_page: 1,
+  });
   const [hostels, setHostels] = useState<Hostel[]>([]);
   const [loading, setLoading] = useState(true);
 

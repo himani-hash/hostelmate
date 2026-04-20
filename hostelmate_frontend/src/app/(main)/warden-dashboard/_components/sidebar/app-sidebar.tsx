@@ -69,7 +69,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   // if (!currentUser) return router.push("/signin");
 
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState<{
+    id?: string;
+    name?: string;
+    username?: string;
+    email?: string;
+    avatar?: string;
+    role?: string;
+  } | null>(null);
   const { sidebarVariant, sidebarCollapsible, isSynced } = usePreferencesStore(
     useShallow((s) => ({
       sidebarVariant: s.sidebarVariant,
