@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   type LucideIcon,
   Star,
+  Stars,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -57,6 +58,11 @@ export const sidebarItems: NavGroup[] = [
         title: "Account",
         url: "/dashboard/account",
         icon: Banknote,
+      },
+      {
+        title: "Complaints",
+        url: "/dashboard/complaints",
+        icon: Stars,
       },
     ],
   },

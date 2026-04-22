@@ -43,24 +43,24 @@ def create_complaint():
     }), 201
 
 @complaint_bp.route("/api/complaints", methods=["GET"])
+@jwt_required()
 def get_complaints():
-    complaints = Complaint.query.all()
-    result = []
+    user_id = get_jwt_identity()
 
+    complaints = Complaint.query.filter_by(user_id=user_id).all()
+
+    data = []
     for c in complaints:
-        result.append({
+        data.append({
             "id": c.id,
             "category": c.category,
             "priority": c.priority,
-            "description": c.description,
             "status": c.status,
-            "admin_response": c.admin_response,
-            "user": "Anonymous" if c.is_anonymous else c.user_id,
-            "created_at": c.created_at,
-            "resolved_at": c.resolved_at
+            "description": c.description,
+            "created_at": c.created_at
         })
 
-    return jsonify(result), 200
+    return jsonify(data)
 
 @complaint_bp.route("/api/complaints/<int:id>", methods=["DELETE"])
 def delete_complaint(id):

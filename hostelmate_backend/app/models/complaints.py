@@ -5,7 +5,7 @@ class Complaint(db.Model):
     __tablename__ = "complaints"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     hostel_id = db.Column(db.Integer, db.ForeignKey("hostels.id"), nullable=False)
     resolved_by = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     category = db.Column(db.String(50), nullable=False) 
