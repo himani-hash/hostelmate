@@ -82,13 +82,13 @@ def get_all_complaints():
     data = []
 
     for c in complaints:
-      
         user_name = None
         user_email = None
 
-        if not c.is_anonymous and c.users:
-            user_name = c.users.name
-            user_email = c.users.email
+     
+        if not c.is_anonymous and c.user:
+            user_name = c.user.name
+            user_email = c.user.email
 
         data.append({
             "id": c.id,
@@ -100,7 +100,15 @@ def get_all_complaints():
             "is_anonymous": c.is_anonymous,
             "user_name": user_name,
             "user_email": user_email,
-            "created_at": c.created_at,
+            "admin_response": c.admin_response,
+
+         
+            "resolved_by": c.resolver.name if c.resolver else None,
+            "resolved_at": c.resolved_at.isoformat() if c.resolved_at else None,
+
+            "created_at": c.created_at.isoformat() if c.created_at else None,
         })
+
+    print(dir(c))
 
     return jsonify(data), 200

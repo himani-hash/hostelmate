@@ -53,14 +53,14 @@ export default function WardenComplaintsPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-      {/* 🔹 Header */}
+    
       <div className="px-6 py-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700 shadow-sm">
         <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
           Warden Complaints Dashboard
         </h2>
       </div>
 
-      {/* 🔹 Content */}
+    
       <div className="p-6 max-w-5xl mx-auto space-y-5">
 
         {complaints.length === 0 ? (

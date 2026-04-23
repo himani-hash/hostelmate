@@ -17,5 +17,6 @@ class Complaint(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
     resolved_at = db.Column(db.DateTime, nullable=True)
-
+    user = db.relationship("User",foreign_keys=[user_id],backref="complaints_created")
+    resolver = db.relationship("User",foreign_keys=[resolved_by],backref="complaints_resolved")
    

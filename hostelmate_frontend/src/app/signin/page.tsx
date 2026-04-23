@@ -30,7 +30,7 @@ export default function Signin() {
       });
 
       const data = await res.json();
-      console.log(data);
+      console.log("kalu=>",data);
 
       if (res.ok) {
         localStorage.setItem("token", data.access_token);
