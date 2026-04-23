@@ -109,6 +109,11 @@ export const wardenSidebarItems: NavGroup[] = [
         title: "Users",
         url: "/warden-dashboard/users",
         icon: Gauge,
+      },
+      {
+        title: "Complaints",
+        url: "/warden-dashboard/complaints",
+        icon: Stars,
       }
     ],
   }

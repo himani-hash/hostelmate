@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
 type Complaint = {
   id: number;
@@ -10,11 +9,12 @@ type Complaint = {
   status: string;
   description: string;
   created_at: string;
+  is_anonymous: boolean;
+  user_name: string | null;
+  user_email: string | null;
 };
 
-export default function MyComplaintsPage() {
-  const router = useRouter();
-
+export default function WardenComplaintsPage() {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +22,7 @@ export default function MyComplaintsPage() {
     const fetchComplaints = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/all-complaints`,
           {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("token"),
@@ -33,7 +33,7 @@ export default function MyComplaintsPage() {
         const data = await res.json();
         setComplaints(data);
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching complaints", err);
       } finally {
         setLoading(false);
       }
@@ -45,7 +45,7 @@ export default function MyComplaintsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500 dark:text-gray-300">
-        Loading...
+        Loading complaints...
       </div>
     );
   }
@@ -53,27 +53,20 @@ export default function MyComplaintsPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
-   
-      <div className="flex justify-between items-center px-6 py-4 border-b bg-white dark:bg-gray-800 dark:border-gray-700 shadow-sm">
+      {/* 🔹 Header */}
+      <div className="px-6 py-4 bg-white dark:bg-gray-800 border-b dark:border-gray-700 shadow-sm">
         <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-          My Complaints
+          Warden Complaints Dashboard
         </h2>
-
-        <button
-          onClick={() => router.push("/dashboard/complaints")}
-          className="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
-        >
-           Register Complaint
-        </button>
       </div>
 
-    
-      <div className="p-6 max-w-4xl mx-auto space-y-5">
+      {/* 🔹 Content */}
+      <div className="p-6 max-w-5xl mx-auto space-y-5">
 
         {complaints.length === 0 ? (
-          <div className="text-center text-gray-500 mt-10">
-            No complaints found 
-          </div>
+          <p className="text-center text-gray-500">
+            No complaints found
+          </p>
         ) : (
           complaints.map((c) => (
             <div
@@ -81,7 +74,6 @@ export default function MyComplaintsPage() {
               className="p-6 rounded-2xl bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition"
             >
 
-         
               <div className="flex justify-between items-center mb-3">
 
           
@@ -89,7 +81,7 @@ export default function MyComplaintsPage() {
                   {c.category}
                 </span>
 
-             
+            
                 <span
                   className={`px-3 py-1 text-xs rounded-full ${
                     c.status === "pending"
@@ -105,14 +97,27 @@ export default function MyComplaintsPage() {
                 </span>
               </div>
 
-              <p className="text-gray-800 dark:text-gray-100 text-base font-medium leading-relaxed mb-4">
+              <p className="text-gray-800 dark:text-gray-100 text-base font-medium mb-4">
                 {c.description}
               </p>
 
-     
+           
+              <div className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                {c.is_anonymous ? (
+                  <span className="italic text-gray-400">
+                    Anonymous User
+                  </span>
+                ) : (
+                  <span>
+                     {c.user_name} • {c.user_email}
+                  </span>
+                )}
+              </div>
+
+             
               <div className="flex justify-between items-center text-sm text-gray-500">
 
-         
+              
                 <span
                   className={`px-2 py-1 rounded ${
                     c.priority === "high"
@@ -125,7 +130,7 @@ export default function MyComplaintsPage() {
                   {c.priority}
                 </span>
 
-        
+         
                 <span>
                   {new Date(c.created_at).toLocaleString()}
                 </span>

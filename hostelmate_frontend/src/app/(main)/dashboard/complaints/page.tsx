@@ -67,38 +67,51 @@ export default function ComplaintPage() {
     });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints`, {
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    setLoading(true); 
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/complaints`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("Complaint submitted");
-        setForm({
-          hostel_id: "",
-          category: "",
-          priority: "",
-          description: "",
-          is_anonymous: false,
-        });
-      } else {
-        alert(data.error || "Error");
       }
-    } catch {
-      alert("Server error");
-    }
-  };
+    );
 
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || "Something went wrong");
+      return;
+    }
+
+    alert("Complaint submitted successfully");
+
+   
+    setForm({
+      hostel_id: "",
+      category: "",
+      priority: "",
+      description: "",
+      is_anonymous: false,
+    });
+
+  } catch (err) {
+    console.error(err);
+    alert("Error submitting complaint");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
 
@@ -200,9 +213,24 @@ export default function ComplaintPage() {
       
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg"
+              disabled={loading}
+              className={`w-full py-3 rounded-lg text-white transition 
+                ${loading 
+                  ? "bg-blue-400 cursor-not-allowed" 
+                  : "bg-blue-600 hover:bg-blue-700"
+                }`}
             >
-              Submit Complaint
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  
+                  {/* 🔄 Spinner */}
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+
+                  Submitting...
+                </span>
+              ) : (
+                "Submit Complaint"
+              )}
             </button>
 
           </form>

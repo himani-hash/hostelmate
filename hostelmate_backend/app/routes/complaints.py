@@ -73,3 +73,34 @@ def delete_complaint(id):
     db.session.commit()
 
     return jsonify({"message": "Complaint deleted"}), 200
+
+@complaint_bp.route("/api/all-complaints", methods=["GET"])
+@jwt_required()
+def get_all_complaints():
+    complaints = Complaint.query.all()
+
+    data = []
+
+    for c in complaints:
+      
+        user_name = None
+        user_email = None
+
+        if not c.is_anonymous and c.users:
+            user_name = c.users.name
+            user_email = c.users.email
+
+        data.append({
+            "id": c.id,
+            "hostel_id": c.hostel_id,
+            "category": c.category,
+            "priority": c.priority,
+            "description": c.description,
+            "status": c.status,
+            "is_anonymous": c.is_anonymous,
+            "user_name": user_name,
+            "user_email": user_email,
+            "created_at": c.created_at,
+        })
+
+    return jsonify(data), 200
