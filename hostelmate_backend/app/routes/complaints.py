@@ -20,16 +20,16 @@ def create_complaint():
             return jsonify({"error": f"{field} is required"}), 400
 
     current_user_id = get_jwt_identity()
+
     is_anonymous = data.get("is_anonymous", False)
-    user_id = None if is_anonymous else current_user_id
 
     complaint = Complaint(
-        user_id=user_id,
+        user_id=current_user_id,   
         hostel_id=data["hostel_id"],
         category=data["category"],
         priority=data["priority"],
         description=data["description"],
-        is_anonymous=is_anonymous,
+        is_anonymous=is_anonymous,  
         status="pending",
         created_at=datetime.utcnow()
     )
