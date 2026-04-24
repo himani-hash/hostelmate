@@ -64,6 +64,11 @@ export const sidebarItems: NavGroup[] = [
         url: "/dashboard/complaints",
         icon: Stars,
       },
+      {
+        title: "Leave Application",
+        url: "/dashboard/leave",
+        icon: Stars,
+      },
     ],
   },
   {
@@ -113,6 +118,11 @@ export const wardenSidebarItems: NavGroup[] = [
       {
         title: "Complaints",
         url: "/warden-dashboard/complaints",
+        icon: Stars,
+      },
+      {
+        title: "Leave Applications",
+        url: "/warden-dashboard/leave",
         icon: Stars,
       }
     ],
