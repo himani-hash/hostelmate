@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from app.extensions import db, jwt
+from app.extensions import db, jwt, mail
 from app.routes.auth import auth_bp
 from app.routes.mess_rating import mess_bp
 from app.routes.hostel import hostel_bp
@@ -41,8 +41,16 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
+    app.config["MAIL_SERVER"] = "smtp.gmail.com"
+    app.config["MAIL_PORT"] = 587
+    app.config["MAIL_USE_TLS"] = True
+    app.config["MAIL_USERNAME"] = os.getenv("MAIL_USERNAME")
+    app.config["MAIL_PASSWORD"] = os.getenv("MAIL_PASSWORD")
+    app.config["MAIL_DEFAULT_SENDER"] = os.getenv("MAIL_USERNAME")
+
     db.init_app(app)
     jwt.init_app(app)
+    mail.init_app(app)
 
     migrate = Migrate(app, db)
 

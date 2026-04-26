@@ -2,6 +2,9 @@ from app.extensions import db
 import bcrypt 
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
+
+token = secrets.token_urlsafe(32)
 
 
 class User(db.Model):
@@ -24,13 +27,7 @@ class User(db.Model):
     hostel_id = db.Column(db.Integer, db.ForeignKey("hostels.id")) 
     
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    def to_dict(self):
-        return{
-            "id":self.id,
-            "email":self.email,
-            "name":self.name
-        }
-    
+   
     role = db.Column(db.String(20), default="student")
     phone = db.Column(db.String(15), unique = True)
     
@@ -40,7 +37,7 @@ class User(db.Model):
     year = db.Column(db.String(20))
     is_verified = db.Column(db.Boolean, default=False)
     verification_token = db.Column(db.String(255))
-    reset_token = db.Column(db.String(255))
+    reset_token = db.Column(db.String(255), nullable=True)
     reset_token_expiry = db.Column(db.DateTime)
     updated_at = db.Column(
         db.DateTime,
