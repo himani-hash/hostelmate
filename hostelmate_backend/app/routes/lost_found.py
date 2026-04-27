@@ -46,3 +46,44 @@ def create_item():
         "message": "Item posted successfully",
         "image_url": image_url
     })
+
+
+@lost_found_bp.route("/api/items", methods=["GET"])
+def get_items():
+
+    item_type = request.args.get("type")
+    status = request.args.get("status")
+    category = request.args.get("category")
+
+    query = LostFound.query
+
+    if item_type:
+        query = query.filter(LostFound.type == item_type)
+
+    if status:
+        query = query.filter(LostFound.status == status)
+
+    if category:
+        query = query.filter(LostFound.category == category)
+
+    items = query.order_by(LostFound.created_at.desc()).all()
+
+    result = []
+
+    for item in items:
+        result.append({
+            "id": item.id,
+            "title": item.title,
+            "description": item.description,
+            "type": item.type,
+            "category": item.category,
+            "location": item.location,
+            "date_lost_found": str(item.date_lost_found) if item.date_lost_found else None,
+            "status": item.status,
+            "photo_url": item.photo_url,
+            "user_id": item.user_id,
+            "claimed_by": item.claimed_by,
+            "created_at": item.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+    return jsonify(result)
