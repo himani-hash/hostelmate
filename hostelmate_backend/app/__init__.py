@@ -8,6 +8,7 @@ from app.routes.mess_menu import menu_bp
 from app.routes.complaints import complaint_bp
 from app.routes.user import user_bp
 from app.routes.leave import leave_bp
+from app.routes.lost_found import lost_found_bp
 from flask_migrate import Migrate
 from app.models.user import User
 from app.models.hostel import Hostels
@@ -15,6 +16,8 @@ from app.models.mess_rating import MessRating
 from app.models.mess_menu import Messmenu
 from app.models.complaints import Complaint
 from app.models.leave import Leave
+from app.models.lost_found import LostFound
+from app.models.claim import Claim
 import cloudinary
 import os
 from dotenv import load_dotenv
@@ -61,5 +64,6 @@ def create_app():
     app.register_blueprint(complaint_bp, url_prefix="")
     app.register_blueprint(user_bp, url_prefix="")
     app.register_blueprint(leave_bp, url_prefix="")
+    app.register_blueprint(lost_found_bp, url_prefix="")    
 
     return app

@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from app.extensions import db
-from datetime import datetime
 from app.models.hostel import Hostels
 from app.models.user import User
 from datetime import datetime
