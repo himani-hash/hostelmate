@@ -69,6 +69,11 @@ export const sidebarItems: NavGroup[] = [
         url: "/dashboard/leave",
         icon: Stars,
       },
+      {
+        title: "Lost & Found",
+        url: "/dashboard/lost-found",
+        icon: Stars,
+      }
     ],
   },
   {

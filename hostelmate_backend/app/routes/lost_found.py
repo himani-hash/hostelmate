@@ -55,8 +55,12 @@ def get_items():
     status = request.args.get("status")
     category = request.args.get("category")
 
+    page = request.args.get("page", 1, type=int)
+    per_page = request.args.get("per_page", 10, type=int)
+
     query = LostFound.query
 
+  
     if item_type:
         query = query.filter(LostFound.type == item_type)
 
@@ -66,7 +70,13 @@ def get_items():
     if category:
         query = query.filter(LostFound.category == category)
 
-    items = query.order_by(LostFound.created_at.desc()).all()
+
+    query = query.order_by(LostFound.created_at.desc())
+
+  
+    paginated_items = query.paginate(page=page, per_page=per_page, error_out=False)
+
+    items = paginated_items.items
 
     result = []
 
@@ -86,4 +96,14 @@ def get_items():
             "created_at": item.created_at.strftime("%Y-%m-%d %H:%M:%S")
         })
 
-    return jsonify(result)
+    return jsonify({
+        "items": result,
+        "pagination": {
+            "current_page": paginated_items.page,
+            "total_pages": paginated_items.pages,
+            "total_items": paginated_items.total,
+            "per_page": paginated_items.per_page,
+            "has_next": paginated_items.has_next,
+            "has_prev": paginated_items.has_prev
+        }
+    })
