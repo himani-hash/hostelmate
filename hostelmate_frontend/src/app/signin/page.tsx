@@ -53,7 +53,7 @@ export default function Signin() {
   const inputBg = "rgba(255,255,255,0.08)";
   const inputBorder = "rgba(255,255,255,0.3)";
   const cardBg = "rgba(0,0,0,0.55)";
-  const filmBg = "rgba(0,0,0,0.85)";
+  const filmBg = "rgba(0,0,0,0.25)";
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
