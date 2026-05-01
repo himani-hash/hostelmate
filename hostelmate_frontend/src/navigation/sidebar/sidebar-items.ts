@@ -4,9 +4,13 @@ import {
   Fingerprint,
   Gauge,
   LayoutDashboard,
+  LucideAudioWaveform,
   type LucideIcon,
+  PenBoxIcon,
   Star,
   Stars,
+  User2,
+  User2Icon,
 } from "lucide-react";
 
 export interface NavSubItem {
@@ -57,40 +61,25 @@ export const sidebarItems: NavGroup[] = [
       {
         title: "Account",
         url: "/dashboard/account",
-        icon: Banknote,
+        icon: User2Icon,
       },
       {
         title: "Complaints",
         url: "/dashboard/complaints",
-        icon: Stars,
+        icon: PenBoxIcon,
       },
       {
         title: "Leave Application",
         url: "/dashboard/leave",
-        icon: Stars,
+        icon: LucideAudioWaveform,
       },
       {
         title: "Lost & Found",
         url: "/dashboard/lost-found",
-        icon: Stars,
+        icon: Gauge,
       }
     ],
-  },
-  {
-    id: 2,
-    label: "Pages",
-    items: [
-      {
-        title: "Authentication",
-        url: "/auth",
-        icon: Fingerprint,
-        subItems: [
-          { title: "Login v1", url: "/auth/v1/login", newTab: true },
-          { title: "Register v1", url: "/auth/v1/register", newTab: true },
-        ],
-      },
-    ],
-  },
+  }
  
 ];
 
@@ -113,22 +102,22 @@ export const wardenSidebarItems: NavGroup[] = [
       {
         title: "Account",
         url: "/warden-dashboard/account",
-        icon: Banknote,
+        icon: User2Icon,
       },
       {
         title: "Users",
         url: "/warden-dashboard/users",
-        icon: Gauge,
+        icon: User2,
       },
       {
         title: "Complaints",
         url: "/warden-dashboard/complaints",
-        icon: Stars,
+        icon: PenBoxIcon,
       },
       {
         title: "Leave Applications",
         url: "/warden-dashboard/leave",
-        icon: Stars,
+        icon: Fingerprint,
       }
     ],
   }
